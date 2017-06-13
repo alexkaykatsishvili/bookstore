@@ -1,0 +1,89 @@
+<style>
+    .hover:hover {
+        background-color: rgba(255, 255, 128, .3);
+    }
+    .title {
+        text-align: center;
+        padding-top: 10%;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+</style>
+<div class="container-fluid" style=" height: 300px; margin-bottom: 50px; background: url(img/pexels-photo-113776.jpeg); background-size: cover;">
+    <div class="row" style="background-color: rgba(249, 216, 148, .3); height:300px;">
+        <h1 class="title">Ukrainian bookstore</h1>
+    </div>
+</div>
+<?php
+
+foreach ($articles as $item){
+    $category = $item->getCategory();
+    if($category){
+        $catName = $category->getCategoryName();
+    } else {
+        $catName = '';
+    }
+    if($item->getIsPublic()){
+        $isPublic = 'Yes';
+    } else {
+        $isPublic = 'No';
+    }
+    $url = $this->url('blog', array('action' => 'article', 'id' => $item->getId()));
+    echo '<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">';
+    echo "<article class = 'panel panel-default  hover'>"
+        . "<div class = 'page-header' style = 'margin-top:17px'>"
+            . "<h4 style = 'padding-bottom: 15px; font-size: 25px; text-align: center'>"
+            . "<a style = 'color: black;' href = '{$url}'>{$item->getTitle()}</a></h4>"
+            . "<img style='max-height: 300px; display: block; max-width: 300px; margin: 0 auto;' src='img/{$item->getBookImg()}.jpg'>"
+        . "</div>"
+        . "<div class = 'panel-body'>{$item->getShortArticleForBlog()}</div>"
+        . "<div class = 'panel-body'><span style='font-size: 24px; color: grey; background-color: pink; border-radius: 10px;'>{$item->getPrice()} грн</span></div>"
+        . "<div class = ' panel-footer' style = 'height: 45px;'>"
+                . "<div style = 'float: left;'>Category: {$item->getCategory()->getCategoryName()}</div>"
+                . "<span style = 'float:right;'><a href = '{$url}'>Далі...</a></span></div>"
+        . "</article>";
+    echo '</div>';
+}
+?>
+<?php echo '<div style="clear: both"></div>'?>
+<?php
+    echo $this->paginationControl($articles, 'Sliding', 'pagination_control',
+            array('route' => 'blog'));
+?>
+
+<div class="container-fluid contact">
+    <div class="row">
+        <div id="map" class="contact__map" style="height: 300px;"></div>
+    </div>
+</div>
+<script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXZCgQtk2Jxe7GRJ8o_vMMDSyWlNEUMdQ">
+</script>
+<script>
+
+        window.onload = function () {
+            var map;
+            var point =  {lat: 48.752219, lng: 37.593790};
+            iv1content = document.querySelector('.info-window-1');
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: point,
+                    zoom: 17,
+                });
+                var marker = new google.maps.Marker({
+                    position: point,
+                    map: map,
+                    title: 'hello',
+                    icon: 'images/key.png'
+                });
+                google.maps.event.addDomListener(window, "resize", function () {
+                    var center = map.getCenter();
+                    google.maps.event.trigger(map, "resize");
+                    map.setCenter(center);
+                })
+            }
+            initMap()
+        }
+
+</script>

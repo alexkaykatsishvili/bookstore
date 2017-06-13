@@ -1,0 +1,26 @@
+<?php echo $this->messages; ?>
+
+<?php
+    $user = $this->identity();
+    
+    if(empty($user)){
+        $form = $this->form;
+        $form->prepare();
+        echo '<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-6 col-xs-offset-3">';
+        echo $this->form()->openTag($form);
+        echo $this->formRow($form->get('usrName'));
+        echo $this->formRow($form->get('usrPassword'));
+        echo $this->formSubmit($form->get('submit'));
+        echo $this->form()->closeTag();
+        
+        echo 'Not signed in';
+
+    ?>
+<br><a href="<?php echo $this->url('auth-doctrine/default', array('controller' => 'index', 'action' => 'register')); ?>"><?php echo 'Registration'; ?></a>
+<?php    
+} else {
+        echo 'Authorized as ' . $this->escapeHtml($user->getUsrName());
+?>
+<br><a href="<?php echo $this->url('auth-doctrine/default', array('controller' => 'index', 'action' => 'logout')); ?>"><?php echo 'Log out'; ?></a>
+<?php } echo '</div>'; ?>
+
